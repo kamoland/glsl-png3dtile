@@ -25,7 +25,11 @@ window.onload = function(){
 
 	// イベントリスナー登録
 	c.addEventListener('mousemove', mouseMove, true);
-	
+
+	// スマホのタッチ操作対応
+	c.addEventListener('touchstart', touchStart, false);
+	c.addEventListener('touchmove', touchMove, false);
+
 	// WebGL コンテキストを取得
 	gl = c.getContext('webgl') || c.getContext('experimental-webgl');
 	
@@ -102,6 +106,23 @@ function mouseMove(e){
 	mx = e.offsetX / cw;
 	my = e.offsetY / ch;
 
+	// 再描画
+	render();
+}
+// スマホのタッチ操作対応
+var tcx0, tcy0;
+function touchStart(e) {
+	tcx0 = e.touches[0].pageX;
+	tcy0 = e.touches[0].pageY;
+}
+function touchMove(e) {
+	e.preventDefault();
+	var tcx = e.touches[0].pageX;
+	var tcy = e.touches[0].pageY;
+	mx += (tcx - tcx0) / cw;
+	my += (tcy - tcy0) / ch;
+	tcx0 = tcx;
+	tcy0 = tcy;
 	// 再描画
 	render();
 }
