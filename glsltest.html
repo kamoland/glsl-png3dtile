@@ -5,8 +5,6 @@ uniform vec2  resolution;
 uniform sampler2D texture0;
 uniform sampler2D texture1;
 
-const vec3 cPos = vec3(0.0,  7.0,  5.0);
-const vec3 cDir = vec3(0.0,  0.0, -1.0);
 const vec3 cUp  = vec3(0.0,  1.0,  0.0);
 
 // 青空対応
@@ -67,7 +65,13 @@ void main(void){
     vec2 m = vec2(mouse.x * 2.0 - 1.0, -mouse.y * 2.0 + 1.0);
 
     // マウス座標によるカメラ移動
-	vec3 cmPos = vec3(cPos.x - m.x * 20.0, cPos.y - m.y * 6.0, cPos.z);
+    float cxrad = -clamp(m.x, -1.0, 1.0) * 6.283;
+    float cxsin = sin(cxrad);
+    float cxcos = cos(cxrad);
+    // カメラ位置は，(x,z)=(0,0)を中心に回転させる
+    vec3 cmPos = vec3(cxsin * 20.0, 7.0 - m.y * 6.0, cxcos * 10.0);
+    // 視線方向は，中心に向ける
+    vec3 cDir = vec3(-cxsin, 0, -cxcos);
 
     // camera and ray
     vec3 cSide = cross(cDir, cUp);
@@ -153,7 +157,7 @@ void main(void){
 出典：<a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>[シームレス空中写真][標高タイル]
 </p>
 <p>
-参考：<a href="https://wgld.org/d/glsl/">wgld.org | GLSL</a>
+説明：<a href="http://kamoland.com/wiki/wiki.cgi?GLSL%A4%CB%A4%E8%A4%EBPNG%C9%B8%B9%E2%A5%BF%A5%A4%A5%EB3D%B2%BD">GLSLによるPNG標高タイル3D化 | kamoland</a>
 </p>
 
 </body>
